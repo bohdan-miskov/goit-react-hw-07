@@ -3,7 +3,6 @@ import * as Yup from "yup";
 import "yup-phone-lite";
 import { useId } from "react";
 import css from "./ContactForm.module.css";
-import { nanoid } from "nanoid";
 import { useDispatch } from "react-redux";
 import { addContact } from "../../redux/contactsOps";
 
@@ -14,9 +13,9 @@ export default function ContactForm() {
   const handleAddContact = (contact) => dispatch(addContact(contact));
   const handleSubmit = (values, helpers) => {
     handleAddContact({
-      id: nanoid(),
       name: values.username,
       number: values.number,
+      createdAt: new Date(),
     });
     helpers.resetForm();
   };
