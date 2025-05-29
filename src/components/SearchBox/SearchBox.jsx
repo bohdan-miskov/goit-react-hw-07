@@ -2,12 +2,19 @@ import { useId } from "react";
 import css from "./SearchBox.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { changeFilter } from "../../redux/filtersSlice";
+import { useDebouncedCallback } from "use-debounce";
 
 export default function SearchBox() {
   const dispatch = useDispatch();
   const id = useId();
   const searchValue = useSelector((state) => state.filters.name);
-  const changeQuery = (newQuery) => dispatch(changeFilter(newQuery));
+
+  const debounced = useDebouncedCallback(
+    (value) => dispatch(handleChangeQuery(value)),
+    500
+  );
+
+  const handleChangeQuery = (newQuery) => dispatch(changeFilter(newQuery));
 
   return (
     <div className={css.container}>
@@ -16,10 +23,10 @@ export default function SearchBox() {
       </label>
       <input
         className={css.input}
-        onChange={(event) => changeQuery(event.target.value)}
+        onChange={(event) => debounced(event.target.value)}
         name="searchName"
         id={`${id}-searchName`}
-        value={searchValue}
+        defaultValue={searchValue}
       />
     </div>
   );
